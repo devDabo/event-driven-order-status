@@ -1,0 +1,27 @@
+package com.training.order.consumer.kafka.producer;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.training.order.consumer.domain.exception.PaymentApplicationServiceException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Component
+public class KafkaMessageHelper {
+
+    private final ObjectMapper objectMapper;
+
+    public KafkaMessageHelper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    public <T> T getOrderEventPayload(String payload, Class<T> outputType) {
+        try {
+            return objectMapper.readValue(payload, outputType);
+        } catch (JsonProcessingException e) {
+            log.error("Could not read {} object!", outputType.getName(), e);
+            throw new PaymentApplicationServiceException("Could not read " + outputType.getName() + " object!", e);
+        }
+    }
+}

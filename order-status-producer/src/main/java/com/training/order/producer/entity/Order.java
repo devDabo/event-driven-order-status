@@ -1,33 +1,32 @@
 package com.training.order.producer.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
-@Data
-@RequiredArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "orders")
 public class Order {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
+    private UUID sagaId;
+    private UUID customerId;
+    private BigDecimal price;
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
-
-    private boolean expedited;
-
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
+    private OrderStatus orderStatus;
+    private ZonedDateTime createdAt;
+    private ZonedDateTime updatedAt;
 }
