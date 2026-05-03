@@ -14,6 +14,7 @@ import debezium.order.payment_outbox.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.postgresql.util.PSQLState;
 import org.springframework.dao.DataAccessException;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -24,6 +25,7 @@ import java.sql.SQLException;
 
 @Slf4j
 @Component
+@EnableKafka
 public class PaymentRequestKafkaListener implements KafkaSingleItemConsumer<Envelope> {
 
     private final PaymentRequestMessageListener paymentRequestMessageListener;

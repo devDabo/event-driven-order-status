@@ -5,6 +5,7 @@ cd "$(dirname "$0")"
 echo "Delete debezium connectors"
 
 curl --location --request DELETE 'localhost:8083/connectors/order-payment-connector'
+curl --location --request DELETE 'localhost:8083/connectors/payment-order-connector'
 
 echo "Shutdown zookeeper"
 

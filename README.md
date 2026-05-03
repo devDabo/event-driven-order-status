@@ -1,6 +1,10 @@
 # event-driven-order-status
 
-Small event-driven order/payment app using a producer app, a consumer app, Postgres, Debezium, and Kafka.
+Small event-driven order/payment app using:
+
+- `order-status-producer` for the HTTP order API and order status updates
+- `order-status-consumer` for payment processing
+- Postgres, Debezium, Kafka, Schema Registry, and Kafka UI for CDC and messaging
 
 ## Run Locally
 
@@ -15,7 +19,10 @@ docker compose -f common.yml -f postgres_debezium.yml up -d
 ./start-up.sh
 ```
 
-This starts Postgres and Debezium first, then brings up Zookeeper, Kafka, topic initialization, and the Debezium connector.
+This starts Postgres first, then brings up Zookeeper, Kafka, Schema Registry, Kafka UI, topic initialization, and both Debezium connectors:
+
+- `order-payment-connector` for `order.payment_outbox`
+- `payment-order-connector` for `payment.order_outbox`
 
 ### Start Applications
 
@@ -40,10 +47,28 @@ Default local ports:
 - Producer API: `http://localhost:8181`
 - Consumer app: `http://localhost:8182`
 - Debezium Connect: `http://localhost:8083`
+- Schema Registry: `http://localhost:8081`
+- Kafka UI: `http://localhost:9000`
+
+### Verify Connectors
+
+After infrastructure is up, verify both connectors are running:
+
+```bash
+curl http://localhost:8083/connectors
+curl http://localhost:8083/connectors/order-payment-connector/status
+curl http://localhost:8083/connectors/payment-order-connector/status
+```
 
 ### Stop Infrastructure
 
-Run these commands from `<repo-root>/infrastructure/docker-compose`:
+For a clean local reset, run this from `<repo-root>/infrastructure/docker-compose`:
+
+```bash
+./shutdown.sh
+```
+
+If you only want to stop the containers without wiping Kafka/Zookeeper volumes, run:
 
 ```bash
 docker compose \
@@ -67,11 +92,12 @@ Use the `Producer API` folder to exercise the order endpoints:
 - `Get Order` sends `GET /orders/{{orderId}}`.
 - `Cancel Order` sends `PATCH /orders/{{orderId}}/cancel`.
 
-Use the `Debezium Connect` folder if you want to verify that the `order-payment-connector` exists and is running.
+Use the `Debezium Connect` folder if you want to verify that both Debezium connectors exist and are running.
 
 Typical flow:
 
 1. Run `Create Order`.
 2. Run `Get Order`.
-3. Run `Cancel Order`.
-4. Run `Get Order` again to confirm the updated order state.
+3. Run `Get Order` again after the payment response is consumed to confirm the order status moved from `PENDING` to `PAID`.
+4. Run `Cancel Order`.
+5. Run `Get Order` again to confirm the updated order state.

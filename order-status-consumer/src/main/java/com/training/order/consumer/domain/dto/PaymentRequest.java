@@ -4,12 +4,14 @@ import com.training.order.consumer.domain.valueobject.PaymentOrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
 @Getter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class PaymentRequest {
     private String id;

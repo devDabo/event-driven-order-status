@@ -68,4 +68,27 @@ curl --location --request POST 'localhost:8083/connectors' \
       }
  }'
 
+curl --location --request POST 'localhost:8083/connectors' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "name": "payment-order-connector",
+  "config": {
+      "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+      "tasks.max": "1",
+      "database.hostname": "host.docker.internal",
+      "database.port": "5433",
+      "database.user": "postgres",
+      "database.password": "admin",
+      "database.dbname" : "postgres",
+      "database.server.name": "PostgreSQL-15",
+      "table.include.list": "payment.order_outbox",
+      "topic.prefix": "debezium",
+      "tombstones.on.delete" : "false",
+      "slot.name" : "payment_order_outbox_slot",
+      "plugin.name": "pgoutput",
+      "auto.create.topics.enable": false,
+      "auto.register.schemas": false
+      }
+ }'
+
 echo "Start-up completed"
