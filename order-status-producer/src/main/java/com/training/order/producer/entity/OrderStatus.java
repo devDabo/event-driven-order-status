@@ -2,6 +2,8 @@ package com.training.order.producer.entity;
 
 public enum OrderStatus {
     PENDING,
-    SHIPPING,
-    CANCELLED
+    PAID,
+    APPROVED,
+    CANCELLED,
+    CANCELLING
 }
