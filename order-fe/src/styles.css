@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+:root {
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+.page-content {
+  width: min(100%, 420px);
+}
+
+.order-form {
+  width: 100%;
+}
